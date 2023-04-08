@@ -104,7 +104,7 @@ class EventsController extends BaseController
     public function getEventsWithWorkshops() {
 
         $events = Event::with('workshops')->get();
-        return response()->json($events);
+        return $events;
 
     }
 
@@ -187,7 +187,7 @@ class EventsController extends BaseController
         //Get all worshops where start greater than in current date.
         $feature_worshops = Workshop::where('start', '>=', Carbon::now())->pluck('event_id');
         $feature_events = Event::with('workshops')->whereIn('id', $feature_worshops)->get();
-        return response()->json($feature_events);
+        return $feature_events;
 
     }
 }
