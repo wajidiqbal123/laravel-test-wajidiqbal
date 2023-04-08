@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
+use App\Models\{Event,Workshop};
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Date;
+use Carbon\Carbon;
 
 class EventsController extends BaseController
 {
@@ -101,7 +102,10 @@ class EventsController extends BaseController
      */
 
     public function getEventsWithWorkshops() {
-        throw new \Exception('implement in coding task 1');
+
+        $events = Event::with('workshops')->get();
+        return response()->json($events);
+
     }
 
 
@@ -179,6 +183,11 @@ class EventsController extends BaseController
      */
 
     public function getFutureEventsWithWorkshops() {
-        throw new \Exception('implement in coding task 2');
+
+        //Get all worshops where start greater than in current date.
+        $feature_worshops = Workshop::where('start', '>=', Carbon::now())->pluck('event_id');
+        $feature_events = Event::with('workshops')->whereIn('id', $feature_worshops)->get();
+        return response()->json($feature_events);
+
     }
 }
